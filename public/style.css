@@ -1,0 +1,591 @@
+/*--------------------------------------------------------------
+# Fade in page on load 
+--------------------------------------------------------------*/
+
+@-webkit-keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@-moz-keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/*--------------------------------------------------------------
+# Root settings
+--------------------------------------------------------------*/
+
+:root {
+	/* common */
+	--msger-top: 50%;
+	--msger-left: 50%;
+	--msger-height: 680px;
+	--msger-width: 420px;
+
+	/* neon theme default */
+	--body-bg: black;
+	--msger-bg: black;
+	--left-msg-bg: #da05f3;
+	--right-msg-bg: #579ffb;
+	--box-shadow: 5px 5px 10px #0500ff, -5px -5px 10px #da05f3;
+	--btn-bg: white;
+	--btn-opc: 1;
+	--btns-left: 20px;
+
+	/* dark theme
+  --body-bg: #16171b;
+  --msger-bg: #16171b;
+  --left-msg-bg: #222328;
+  --right-msg-bg: #0a0b0c;
+  --box-shadow: 5px 5px 10px #0a0b0c, -5px -5px 10px #222328; 
+  --btn-bg: white;
+  --btn-opc: 1;
+  --btns-left: 20px;
+  */
+
+	/* ghost theme
+  --body-bg: #16171b;
+  --msger-bg: transparent;
+  --left-msg-bg: transparent;
+  --right-msg-bg: transparent;
+  --box-shadow: "0px"; 
+  --btn-bg: transparent;
+  --btn-opc: 0.7;
+  --btns-left: 2px;
+  */
+
+	/* https://developer.mozilla.org/it/docs/Web/CSS/object-fit */
+	--video-object-fit: cover;
+}
+
+* {
+	outline: none;
+}
+
+/*--------------------------------------------------------------
+# Body setup
+--------------------------------------------------------------*/
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+		'Helvetica Neue', sans-serif;
+	background: var(--body-bg);
+	background-image: url('/images/loader.gif');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+	margin: 0;
+	padding: 0;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	opacity: 0; /* make things invisible upon start */
+	-webkit-animation: fadeIn ease-in 1;
+	-moz-animation: fadeIn ease-in 1;
+	animation: fadeIn ease-in 1;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-duration: 0.3s;
+	-moz-animation-duration: 0.3s;
+	animation-duration: 0.3s;
+	overflow: hidden;
+}
+
+/*--------------------------------------------------------------
+# Mirotalk call timer
+--------------------------------------------------------------*/
+
+#countTime {
+	z-index: 8;
+	display: none;
+	width: 100%;
+	left: 15px;
+	padding: 10px;
+	background-color: transparent;
+	position: fixed;
+	color: rgb(112, 112, 112);
+	text-align: left;
+	top: 0;
+}
+
+/*--------------------------------------------------------------
+# Left buttons
+--------------------------------------------------------------*/
+#mbtn {
+	z-index: 10;
+}
+#mbtn button {
+	border: none;
+	font-size: 1.5rem;
+	background: var(--btn-bg);
+	padding: 4px;
+	border-radius: 5px;
+	z-index: 10;
+	margin-left: 4px;
+}
+
+button:focus {
+	outline: none;
+}
+button:hover {
+	color: rgb(8, 189, 89);
+}
+
+#shareRoomBtn,
+#audioBtn,
+#videoBtn,
+#swapCameraBtn,
+#screenShareBtn,
+#fullScreenBtn,
+#chatRoomBtn,
+#themeBtn,
+#myDevicesBtn,
+#aboutBtn,
+#leaveRoomBtn {
+	font-size: 2rem;
+	opacity: var(--btn-opc);
+}
+
+.fa-microphone-slash,
+.fa-video-slash {
+	color: #e74c3c !important;
+}
+
+/*--------------------------------------------------------------
+# Chat room aka msger
+--------------------------------------------------------------*/
+
+.msger-draggable {
+	z-index: 9;
+	display: none;
+	position: absolute;
+	/* center screen */
+	top: var(--msger-top);
+	left: var(--msger-left);
+	transform: translate(-50%, -50%);
+	/* end center screen  */
+	height: var(--msger-height);
+	width: var(--msger-width);
+	background: var(--msger-bg);
+	/* text-align: justify; */
+	-webkit-animation: fadeIn ease-in 1;
+	-moz-animation: fadeIn ease-in 1;
+	animation: fadeIn ease-in 1;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-duration: 1s;
+	-moz-animation-duration: 1s;
+	animation-duration: 1s;
+	overflow: hidden;
+	border-radius: 5px;
+	box-shadow: var(--box-shadow);
+}
+
+.msger {
+	display: flex;
+	flex-flow: column wrap;
+	justify-content: space-between;
+	top: var(--msger-top);
+	left: var(--msger-left);
+	height: var(--msger-height);
+	width: var(--msger-width);
+	background: var(--msger-bg);
+}
+
+/*--------------------------------------------------------------
+# Chat room header
+--------------------------------------------------------------*/
+
+.msger-header {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px;
+	background: rgb(0, 0, 0);
+	color: #666;
+	cursor: move;
+}
+
+.msger-header-options {
+	cursor: pointer;
+}
+
+.msger-header-options button {
+	border: none;
+	font-size: 1.2rem;
+	transition: all 0.3s ease-in-out;
+	background: rgb(0, 0, 0);
+	color: #fff;
+	border-radius: 5px;
+}
+
+#msgerTheme,
+#msgerClean,
+#msgerSendBtn,
+#msgerEmojiBtn,
+#msgerClose {
+	background: rgb(0, 0, 0);
+	color: #fff;
+	transition: background 0.23s;
+}
+
+#msgerTheme:hover {
+	color: rgb(0, 180, 50);
+}
+#msgerClean:hover {
+	color: rgb(0, 180, 50);
+}
+#msgerSendBtn:hover {
+	color: rgb(0, 180, 50);
+}
+#msgerEmojiBtn:hover {
+	color: rgb(0, 180, 50);
+}
+#msgerClose:hover {
+	color: rgb(0, 180, 50);
+}
+
+/*--------------------------------------------------------------
+# Chat room output area
+--------------------------------------------------------------*/
+
+.msger-chat {
+	flex: 1;
+	overflow-y: auto;
+	padding: 10px;
+	background: var(--msger-bg);
+}
+.msger-chat::-webkit-scrollbar {
+	width: 5px;
+}
+.msger-chat::-webkit-scrollbar-track {
+	background: transparent;
+}
+.msger-chat::-webkit-scrollbar-thumb {
+	background: black;
+}
+
+.msg {
+	display: flex;
+	align-items: flex-end;
+	margin-bottom: 10px;
+}
+
+.msg:last-of-type {
+	margin: 0;
+}
+
+/* left side */
+
+.left-msg .msg-bubble {
+	background: var(--left-msg-bg);
+	border-bottom-left-radius: 0;
+	color: #fff;
+}
+
+/* right side */
+
+.right-msg {
+	flex-direction: row-reverse;
+}
+.right-msg .msg-bubble {
+	background: var(--right-msg-bg);
+	border-bottom-right-radius: 0;
+	color: #fff;
+}
+.right-msg .msg-img {
+	margin: 0 0 0 10px;
+}
+
+/* common */
+
+.msg-img {
+	width: 50px;
+	height: 50px;
+	margin-right: 10px;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	/* border-radius: 50%; */
+}
+
+.msg-bubble {
+	max-width: 200px;
+	padding: 15px;
+	border-radius: 15px;
+}
+
+.msg-info {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.msg-info-name {
+	margin-right: 10px;
+	font-weight: bold;
+}
+
+.msg-info-time {
+	font-size: 0.85em;
+}
+
+.msg-text {
+	/* https://css-tricks.com/almanac/properties/o/overflow-wrap/ */
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	hyphens: auto;
+}
+
+#chat-msg-a {
+	color: white;
+}
+
+/*--------------------------------------------------------------
+# Chat room input area
+--------------------------------------------------------------*/
+
+.msger-inputarea {
+	display: flex;
+	padding: 10px;
+	background: var(--msger-bg);
+}
+
+.msger-inputarea * {
+	padding: 10px;
+	border: none;
+	border-radius: 3px;
+	font-size: 1em;
+	color: white;
+}
+
+.msger-input {
+	flex: 1;
+	background: rgb(0, 0, 0);
+}
+
+/*--------------------------------------------------------------
+# Emoji picker
+--------------------------------------------------------------*/
+
+#msgerEmojiPicker {
+	z-index: 11;
+	display: none;
+	box-shadow: var(--box-shadow);
+	/* center */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	/* fade in */
+	-webkit-animation: fadeIn ease-in 1;
+	-moz-animation: fadeIn ease-in 1;
+	animation: fadeIn ease-in 1;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-duration: 1s;
+	-moz-animation-duration: 1s;
+	animation-duration: 1s;
+	overflow: hidden;
+}
+
+#msgerEmojiHeader {
+	background: var(--msger-bg);
+	cursor: move;
+}
+
+#msgerCloseEmojiBtn {
+	border: none;
+	font-size: 1.2rem;
+	transition: all 0.3s ease-in-out;
+	background: rgb(0, 0, 0);
+	color: #fff;
+	border-radius: 5px;
+}
+
+#msgerCloseEmojiBtn:hover {
+	color: rgb(0, 180, 50);
+}
+
+emoji-picker {
+	--num-columns: 9;
+	--emoji-size: 1.5rem;
+	--background: var(--msger-bg);
+}
+
+/*--------------------------------------------------------------
+# Handle video elements
+--------------------------------------------------------------*/
+
+#myVideoParagraph {
+	z-index: 7;
+}
+
+#myVideo.mirror {
+	transform: rotateY(180deg);
+	-webkit-transform: rotateY(180deg);
+	-moz-transform: rotateY(180deg);
+}
+
+video {
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	object-fit: var(--video-object-fit);
+	border: 5px solid transparent;
+	background-color: green;
+}
+video:fullscreen {
+	object-fit: contain;
+}
+.video h3 {
+	color: white;
+	font: bold 18px Arial, Sans-Serif;
+	line-height: 20px;
+	background: rgba(0, 0, 0, 0.55);
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding: 10px;
+	z-index: 0;
+}
+.video {
+	float: left;
+	width: 25vw;
+	height: 40vh;
+	overflow: hidden;
+	position: relative;
+}
+.video.one {
+	width: 100vw;
+	height: 100vh;
+}
+.video.two {
+	width: 50vw;
+	height: 100vh;
+	--video-object-fit: contain;
+}
+.video.three {
+	/* width: 33.33vw;
+  height: 100vh; */
+	width: 50vw;
+	--video-object-fit: cover;
+}
+.video.four {
+	width: 50vw;
+	height: 50vh;
+	--video-object-fit: cover;
+}
+.video.five {
+	width: 33.33vw;
+	height: 50vh;
+	--video-object-fit: cover;
+}
+.video.six {
+	width: 33.33vw;
+	height: 50vh;
+	--video-object-fit: cover;
+}
+
+/*--------------------------------------------------------------
+# Handle video elements on screen resize
+--------------------------------------------------------------*/
+
+@media only screen and (max-width: 960px) {
+	.video {
+		float: left;
+		width: 50vw;
+		height: 25vh;
+		overflow: hidden;
+	}
+	.video.two {
+		width: 100vw;
+		height: 50vh;
+		--video-object-fit: cover;
+	}
+	.video.three {
+		width: 100vw;
+		height: 33.33vh;
+		--video-object-fit: cover;
+	}
+	.video.five {
+		width: 50vw;
+		height: 33.33vh;
+		--video-object-fit: cover;
+	}
+	.video.six {
+		width: 50vw;
+		height: 33.33vh;
+		--video-object-fit: cover;
+	}
+}
+
+/*--------------------------------------------------------------
+# My video audio devices
+--------------------------------------------------------------*/
+
+#myDevices {
+	display: none;
+	z-index: 12;
+	/* center */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	/* gui */
+	background-color: rgba(0, 0, 0, 0.7);
+	border-radius: 5px;
+	margin: auto;
+	box-shadow: var(--box-shadow);
+	padding: 10px;
+	/* fade in */
+	-webkit-animation: fadeIn ease-in 1;
+	-moz-animation: fadeIn ease-in 1;
+	animation: fadeIn ease-in 1;
+	-webkit-animation-fill-mode: forwards;
+	-moz-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-duration: 1s;
+	-moz-animation-duration: 1s;
+	animation-duration: 1s;
+	overflow: hidden;
+}
+
+#myDeviceHeader {
+	cursor: move;
+}
+
+#myDevices label {
+	width: 7em;
+	display: flex;
+	color: limegreen;
+}
+
+#myDevices select {
+	width: 25em;
+	height: 30px;
+	color: white;
+	background-color: #2b2b2b;
+	border-radius: 5px;
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>chat video</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="description"
+        content="mirotalk powered by WebRTC, Real-time secure video calls, chat and screen sharing capabilities in the browser, from your mobile or desktop" />
+    <meta name="keywords"
+        content="webrtc, webrtc stun, webrtc turn, video meeting, video chat, multi video chat, peer to peer, p2p, zoom" />
+    <!-- https://ogp.me -->
+    <meta property="og:type" content="app-webrtc" />
+    <meta property="og:site_name" content="mirotalk" />
+    <meta property="og:title" content="Click the link to join this call" />
+    <meta property="og:description" content="mirotalk - A free WebRTC browser-based video call." />
+    <meta property="og:image" content="/images/mirotalk.png" />
+    <meta property="og:url" content="https://mirotalk.herokuapp.com/" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png" />
+    <!-- mirotalk css-->
+    <link rel="stylesheet" href="style.css" />
+    <!-- https://animate.style -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" id="countTime">00:00:00</a>
+            </div>
+            <div id="mbtn">
+                <button title="share room" id="shareRoomBtn" class="fas fa-users"></button>
+                <button title="audio" id="audioBtn" class="fas fa-microphone"></button>
+                <button title="video" id="videoBtn" class="fas fa-video"></button>
+                <button title="swap camera" id="swapCameraBtn" class="fas fa-sync-alt"></button>
+                <button title="share screen" id="screenShareBtn" class="fas fa-desktop"></button>
+                <button title="full screen" id="fullScreenBtn" class="fas fa-expand-alt"></button>
+                <button title="chat room" id="chatRoomBtn" class="fas fa-comment"></button>
+                <button title="theme" id="themeBtn" class="fas fa-palette"></button>
+                <button title="devices" id="myDevicesBtn" class="fas fa-cogs"></button>
+                <button title="about" id="aboutBtn" class="fas fa-question"></button>
+                <button title="leave room" id="leaveRoomBtn" class="fas fa-phone-slash"></button>
+            </div>
+        </div>
+    </nav>
+
+
+    <section id="msgerDraggable" class="msger-draggable">
+        <section id="msger" class="msger">
+            <header id="msgerHeader" class="msger-header">
+                <div class="msger-header-title">
+                    <i class="fas fa-comment-alt"></i> mirotalk-Chat
+                </div>
+                <div class="msger-header-options">
+                    <button id="msgerTheme" title="ghost theme" class="fas fa-ghost"></button>
+                    <button id="msgerClean" title="clean msgs" class="fas fa-trash"></button>
+                    <button title="emoji" id="msgerEmojiBtn" class="fas fa-smile"></button>
+                    <button id="msgerClose" title="close chat" class="fas fa-times"></button>
+                </div>
+            </header>
+
+            <main id="msgerChat" class="msger-chat">
+                <div class="msg left-msg">
+                    <div class="msg-img" style="background-image: url('/images/friend.svg')"></div>
+
+                    <div class="msg-bubble">
+                        <div class="msg-info">
+                            <div class="msg-info-name">Friends Name</div>
+                            <div class="msg-info-time">00:00</div>
+                        </div>
+
+                        <div class="msg-text">Hi, welcome to mirotalk-Chat</div>
+                    </div>
+                </div>
+
+                <div class="msg right-msg">
+                    <div class="msg-img" style="background-image: url('/images/programmer.svg')"></div>
+
+                    <div class="msg-bubble">
+                        <div class="msg-info">
+                            <div class="msg-info-name">Your Name</div>
+                            <div class="msg-info-time">00:00</div>
+                        </div>
+
+                        <div class="msg-text">Your message example</div>
+                    </div>
+                </div>
+            </main>
+
+            <form class="msger-inputarea">
+                <input id="msgerInput" class="msger-input" type="text" placeholder="Enter your message..." />
+                <button title="send" id="msgerSendBtn" class="fas fa-paper-plane"></button>
+            </form>
+        </section>
+    </section>
+
+    <section id="msgerEmojiPicker">
+        <header id="msgerEmojiHeader">
+            <button title="close" id="msgerCloseEmojiBtn" class="fas fa-times"></button>
+        </header>
+        <emoji-picker class="dark"></emoji-picker>
+    </section>
+    <!-- End emoji picker -->
+
+    <!-- Start audio - video devices -->
+    <section id="myDevices">
+        <header id="myDeviceHeader">
+            <button title="close" id="myDevicesCloseBtn" class="fas fa-times"></button>
+        </header>
+        <main>
+            <br />
+            <div>
+                <label for="audioSource">Audio input:&nbsp;</label><br /><select id="audioSource"></select>
+            </div>
+            <br />
+            <div>
+                <label for="audioOutput">Audio output:&nbsp;</label><br /><select id="audioOutput"></select>
+            </div>
+            <br />
+            <div>
+                <label for="videoSource">Video source:&nbsp;</label><br /><select id="videoSource"></select>
+            </div>
+        </main>
+    </section>
+    <!-- End audio - video devices -->
+    <div class='container-fluid' id="containerforvideos">
+
+    </div>
+
+    <!-- Js scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/d2f1016e6f.js" crossorigin="anonymous"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <script src="https://cdn.rawgit.com/muaz-khan/DetectRTC/master/DetectRTC.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script type="module" src="https://unpkg.com/emoji-picker-element@1"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="bundle.js"></script>
+    <!-- end of Js scriots -->
+</body>
+
+</html>
